@@ -1,0 +1,3 @@
+// Retirement worker for installations of earlier versions. No fetch caching.
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('yanyana-offline-')).map(k=>caches.delete(k)));await self.registration.unregister()})()));

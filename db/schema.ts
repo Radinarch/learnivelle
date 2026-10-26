@@ -1,0 +1,9 @@
+// Intentionally empty by default.
+// Add Drizzle tables here when the site actually needs a database.
+// See examples/d1/db/schema.ts for an opt-in example.
+import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
+export const entries=sqliteTable('entries',{id:text('id').primaryKey(),type:text('type').notNull(),owner:text('owner').notNull(),name:text('name').notNull(),title:text('title').notNull(),body:text('body').notNull(),subject:text('subject').notNull(),kind:text('kind').notNull(),files:text('files').notNull().default('[]'),source:text('source').notNull().default(''),exercise:text('exercise').notNull().default(''),answer:text('answer').notNull().default(''),created:integer('created').notNull(),resolved:integer('resolved').notNull().default(0),helper:text('helper'),helperName:text('helper_name'),reflection:text('reflection').notNull().default('')});
+export const replies=sqliteTable('replies',{id:text('id').primaryKey(),entryId:text('entry_id').notNull().references(()=>entries.id,{onDelete:'cascade'}),owner:text('owner').notNull(),name:text('name').notNull(),body:text('body').notNull(),files:text('files').notNull().default('[]'),created:integer('created').notNull()});
+export const votes=sqliteTable('votes',{entryId:text('entry_id').notNull().references(()=>entries.id,{onDelete:'cascade'}),owner:text('owner').notNull(),score:integer('score').notNull()},t=>[primaryKey({columns:[t.entryId,t.owner]})]);
+export const uploads=sqliteTable('uploads',{id:text('id').primaryKey(),owner:text('owner').notNull(),entryId:text('entry_id'),name:text('name').notNull(),mime:text('mime').notNull(),size:integer('size').notNull(),created:integer('created').notNull()});
+export const reports=sqliteTable('reports',{entryId:text('entry_id').notNull(),owner:text('owner').notNull(),reason:text('reason').notNull(),created:integer('created').notNull()},t=>[primaryKey({columns:[t.entryId,t.owner]})]);
